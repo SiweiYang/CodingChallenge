@@ -58,7 +58,7 @@ main = do
     args <- getArgs
     let lowR = read (head args)
     let highR = read (head (tail args))
-    let allR = [r | r <- [lowR..highR], mod r 2 == 0]
+    let allR = [r | r <- [lowR..highR], mod r 4 == 0]
     let allT = concat [expR r | r <- allR]
     let result = sum [x + y + z | (x, y, z) <- allT]
     putStrLn (show result)
