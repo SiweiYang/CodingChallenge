@@ -3,6 +3,9 @@ import System(getArgs)
 vt :: Integer -> Integer -> Integer -> Integer -> Bool
 vt r x y z = x * y * z == (x + y + z) * r * r
 
+st :: (Integer, Integer, Integer) -> (Integer, Integer, Integer)
+st (x, y, z) = (x+y, x+z, y+z)
+
 --expR :: Integer -> [(Integer, Integer, Integer)]
 expR r =
     concat [expX r x | x <- allX]
@@ -29,31 +32,23 @@ findY r x = [y | y <- [minY..maxY], mod (x + y) 2 == 0]
     where
         doubleR = fromInteger r
         doubleX = fromInteger x
-        arcX = atan (doubleX / doubleR)
-        minArcY = (pi / 2) - arcX
-        maxArcY = (pi - arcX) / 2
-        minY = max (floor ((tan minArcY) * doubleR)) x
-        maxY = ceiling ((tan maxArcY) * doubleR)
+        minY = ceiling (doubleR * doubleR / doubleX)
+        maxY = floor (2 * doubleR * doubleR / doubleX)
 
 findZ :: Integer -> Integer -> Integer -> Integer
 findZ r x y =
-    if lowZ > x + y || highZ < x + y
-    then 0
-    else
-        if mod (y + lowZ) 2 == 0
-        then lowZ
-        else highZ
+    if mod (y + lowZ) 2 == 0
+    then lowZ
+    else lowZ + 1
     where
         doubleR = fromInteger r
         doubleX = fromInteger x
         doubleY = fromInteger y
-        arcX = atan (doubleX / doubleR)
-        arcY = atan (doubleY / doubleR)
-        arcZ = pi - arcX - arcY
-        estZ = (tan arcZ) * doubleR
+        tanX = doubleX / doubleR
+        tanY = doubleY / doubleR
+        tanZ = (tanX + tanY) / (tanX * tanY - 1)
+        estZ = tanZ * doubleR
         lowZ = floor estZ
-        highZ = ceiling estZ
-
 main = do
     args <- getArgs
     let lowR = read (head args)
