@@ -49,38 +49,29 @@ time ./HT-OPTIMIZED 2304 2400 +RTS -K100000000 -RTS >> result &
 time ./HT-OPTIMIZED 2404 2500 +RTS -K100000000 -RTS >> result
 echo [2500] >> result
 
-echo [2504,100,2600] >> result
+echo [2504,100,2800] >> result
 time ./HT-OPTIMIZED 2504 2600 +RTS -K100000000 -RTS >> result &
 time ./HT-OPTIMIZED 2604 2700 +RTS -K100000000 -RTS >> result &
 time ./HT-OPTIMIZED 2704 2800 +RTS -K100000000 -RTS >> result
 echo [2800] >> result
 
-echo [2804,100,3000] >> result
+echo [2804,100,3200] >> result
 time ./HT-OPTIMIZED 2804 2900 +RTS -K100000000 -RTS >> result &
-time ./HT-OPTIMIZED 2904 3000 +RTS -K100000000 -RTS >> result
-echo [3000] >> result
-
-echo [3004,100,3200] >> result
+time ./HT-OPTIMIZED 2904 3000 +RTS -K100000000 -RTS >> result &
 time ./HT-OPTIMIZED 3004 3100 +RTS -K100000000 -RTS >> result &
 time ./HT-OPTIMIZED 3104 3200 +RTS -K100000000 -RTS >> result
 echo [3200] >> result
 
-echo [3204,100,3400] >> result
+echo [3204,100,3600] >> result
 time ./HT-OPTIMIZED 3204 3300 +RTS -K100000000 -RTS >> result &
-time ./HT-OPTIMIZED 3304 3400 +RTS -K100000000 -RTS >> result
-echo [3400] >> result
-
-echo [3404,100,3600] >> result
+time ./HT-OPTIMIZED 3304 3400 +RTS -K100000000 -RTS >> result &
 time ./HT-OPTIMIZED 3404 3500 +RTS -K100000000 -RTS >> result &
 time ./HT-OPTIMIZED 3504 3600 +RTS -K100000000 -RTS >> result
 echo [3600] >> result
 
-echo [3604,100,3800] >> result
+echo [3604,100,4000] >> result
 time ./HT-OPTIMIZED 3604 3700 +RTS -K100000000 -RTS >> result &
-time ./HT-OPTIMIZED 3704 3800 +RTS -K100000000 -RTS >> result
-echo [3800] >> result
-
-echo [3804,100,4000] >> result
+time ./HT-OPTIMIZED 3704 3800 +RTS -K100000000 -RTS >> result &
 time ./HT-OPTIMIZED 3804 3900 +RTS -K100000000 -RTS >> result &
 time ./HT-OPTIMIZED 3904 4000 +RTS -K100000000 -RTS >> result
 echo [4000] >> result
