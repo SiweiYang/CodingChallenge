@@ -25,30 +25,33 @@ findX r = [1..(floor (doubleR * (sqrt 3.0)))]
         doubleR = fromInteger r
 
 findYZ :: Integer -> Integer -> [(Integer, Integer)]
-findYZ r x = map (\(y, Just z) -> (y, z)) allYZ
+findYZ r x = [(y, z) | (y, z) <- zip allY allZ, not (z == 0)]
     where
         doubleR = fromInteger r
         doubleX = fromInteger x
-        minY = ceiling (doubleR * doubleR / doubleX)
-        maxY = floor (2 * doubleR * doubleR / doubleX)
-        allY = [y | y <- [minY..maxY], mod (x + y) 2 == 0]
+	ctanX = doubleR / doubleX
+	edgeX = sqrt (doubleR * doubleR + doubleX * doubleX)
+        minY = doubleR * ctanX
+        maxY = (doubleR + edgeX) * ctanX
+	length = ceiling ((maxY - minY) / 2)
+	start = (floor minY) - (mod (x + (floor minY)) 2)
+        allY = [start + offset * 2 | offset <- [1..length]]
+	--allY = [y | y <- [floor minY..ceiling maxY], mod (x + y) 2 == 0]
         allZ = [findZ r x y | y <- allY]
-        allYZ = [(y, z) | (y, z) <- zip allY allZ, not (z == Nothing)]
 
-findZ :: Integer -> Integer -> Integer -> Maybe Integer
+findZ :: Integer -> Integer -> Integer -> Integer
 findZ r x y =
-    if isRec || tanY > tanZ || notWhole || mod (y + z) 2 == 1
-    then Nothing
-    else Just z
+    if factorTanZ == 0 || y > z || notWhole || mod (y + z) 2 == 1
+    then 0
+    else z
     where
         rationalR = fromInteger r
         rationalX = fromInteger x
         rationalY = fromInteger y
         tanX = rationalX / rationalR :: Rational
         tanY = rationalY / rationalR :: Rational
-        isRec = tanX * tanY == 1
-        tanZ = (tanX + tanY) / (tanX * tanY - 1)
-        rationalZ = tanZ * rationalR
+	factorTanZ = (tanX * tanY - 1)
+        rationalZ = (rationalX + rationalY) / factorTanZ
         z = floor rationalZ
         notWhole = rationalZ > (fromInteger z)
 
