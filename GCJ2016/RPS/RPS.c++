@@ -21,124 +21,120 @@ void swap(int pos, int step, char *s) {
     char t;
     for(int i=0; i<step; i++) {
         t = s[pos+i];
-	s[pos+i] = s[pos+i+step];
-	s[pos+i+step] = t;
+        s[pos+i] = s[pos+i+step];
+        s[pos+i+step] = t;
     }
+}
+
+bool gt(int length, char *p, int pp, char *q, int pq) {
+    for (int i=0; i<length; i++) {
+        if(p[pp+i] > q[pq+i]){
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 int tomin(int n, int i, char *s) {
     int step = pow(2,i);
 
     for (int j=0; j<n; j+=2*step) {
-        bool ts = false;
-        for (int k=0; k<step; k++) {
-	    if(s[j+k] > s[j+k+step]){
-	        ts = true;
-		break;
-	    }
-	}
-
-        if(ts) {
-	    swap(j, step, s);
-	}
+        if(gt(step, s, j, s, j + step)) {
+            swap(j, step, s);
+        }
     }
 }
 
-char * gen(int n, char *s) {
-    if(n == 0)return s;
+void gen(int n, char *s) {
+    if(n == 0)return;
 
-    char *ss = new char[n*2];
-
-    for (int i=0; i<n; i++) {
+    for (int i=n-1; i>-1; i--) {
         //ss[2*i] = s[i];
-	//ss[2*i + 1] = s[i];
-
-	if (s[i] == 'R') {
-	    ss[2*i] = 'R';
-	    ss[2*i + 1] = 'S';
-	}
-
-	if (s[i] == 'P') {
-	    ss[2*i] = 'P';
-	    ss[2*i + 1] = 'R';
-	}
-
-	if (s[i] == 'S') {
-	    ss[2*i] = 'P';
-	    ss[2*i + 1] = 'S';
-	}
+        //ss[2*i + 1] = s[i];
+        char p, q;
+        if (s[i] == 'R') {
+            p = 'R';
+            q = 'S';
+        }
+    
+        if (s[i] == 'P') {
+            p = 'P';
+            q = 'R';
+        }
+    
+        if (s[i] == 'S') {
+            p = 'P';
+            q = 'S';
+        }
+        
+        s[2*i] = p;
+        s[2*i + 1] = q;
     }
-
-    return ss;
 }
 
 int main(int argc, char **argv) {
-	const char *fn = "sample1.in";
-	if (argc > 1)fn = argv[1];
+    const char *fn = "sample1.in";
+    if (argc > 1)fn = argv[1];
 
-	ifstream in(fn);
-	int total_case;
-	in >> total_case;
-	
-        int vals[3];
-	for (int i = 1; i < total_case + 1; i++) {
-	        int n, r, p, s;
-		in >> n;
-		in >> r;
-		in >> p;
-		in >> s;
+    ifstream in(fn);
+    int total_case;
+    in >> total_case;
+    
+    int vals[3];
+    for (int i = 1; i < total_case + 1; i++) {
+        int n, r, p, s, length;
+        in >> n;
+        in >> r;
+        in >> p;
+        in >> s;
+        length = pow(2, n);
+
+        char *cand = NULL;
+        char c;
+        for (int i = 0; i < 3; i++) {
+            if (i==0) {
+                c = 'R';
+            }
+            if (i==1) {
+                c = 'P';
+            }
+            if (i==2) {
+                c = 'S';
+            }
+            
+            vals[i%3] = 1;
+            vals[(i+1)%3] = 0;
+            vals[(i+2)%3] = 0;
+ 
+            for(int j=0; j < n; j++) {
+                trans(vals);
+            }
+            
+            if (vals[0] == r && vals[1] == p && vals[2] == s) {
+                char *str = (char *)calloc(length, sizeof(char));
+                *str = c;
                 
-		char c;
-		char *str;
-		for (int i = 0; i < 3; i++) {
-		    if (i==0) {
-		    c = 'P';
-		    vals[i%3] = 0;
-	            vals[(i+1)%3] = 1;
-		    vals[(i+2)%3] = 0;
-		    }
-		    if (i==1) {
-		    c = 'R';
-		    vals[i%3] = 0;
-	            vals[(i+1)%3] = 0;
-		    vals[(i+2)%3] = 1;
-		    }
-		    if (i==2) {
-		    c = 'S';
-		    vals[i%3] = 1;
-	            vals[(i+1)%3] = 0;
-		    vals[(i+2)%3] = 0;
-		    }
+                for(int j=0; j<n; j++) {
+                    gen(pow(2, j), str);
+                }
 
-	            
-                    
-		    for(int j=0; j < n; j++) {
-		        trans(vals);
-		    }
+                for(int j=0; j<n; j++) {
+                    tomin(length, j, str);
+                }
 
-		    if (vals[0] == r && vals[1] == p && vals[2] == s) {
-		        str = &c;
-		        for(int j=0; j<n; j++) {
-			    str = gen(2^j, str);
-			}
+                if(cand == NULL || gt(length, cand, 0, str, 0))cand = str;
+            }
+        }
 
-			for(int j=0; j<n; j++) {
-			    tomin(n, j, str);
-			}
+        cout << "Case #" << i << ": ";
+        if (cand == NULL) {
+            cout << "IMPOSSIBLE";
+        } else {
+            cout << cand;
+        }
+        cout << endl;
+    }
 
-		        break;
-		    }
-		    c = 'N';
-		}
-
-		cout << "Case #" << i << ": ";
-		if (c == 'N') {
-		    cout << "IMPOSSIBLE";
-		} else {
-		    cout << str;
-		}
-		cout << endl;
-	}
-
-	return 0;
+    return 0;
 }
