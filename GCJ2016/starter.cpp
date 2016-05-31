@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <unordered_set>
 #include <string.h>
 using namespace std;
 
@@ -21,7 +22,7 @@ int main(int argc, char **argv) {
 	in >> total_case;
 
 	for (int i = 1; i < total_case + 1; i++) {
-		cout << "Case #" << i << ":";
+		cout << "Case #" << i << ": ";
 		cout << endl;
 	}
 

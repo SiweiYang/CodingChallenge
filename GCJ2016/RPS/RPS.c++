@@ -31,6 +31,10 @@ bool gt(int length, char *p, int pp, char *q, int pq) {
         if(p[pp+i] > q[pq+i]){
             return true;
         }
+        
+        if(p[pp+i] < q[pq+i]){
+            return false;
+        }
     }
     
     return false;
