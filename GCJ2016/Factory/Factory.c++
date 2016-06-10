@@ -1,11 +1,16 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <tuple>
 #include <algorithm>
 #include <unordered_map>
 #include <unordered_set>
 #include <string.h>
 using namespace std;
+
+typedef struct {
+    
+} group;
 
 vector<int> fromR(int n, int ms, bool *m, int r) {
     vector<int> ids;
@@ -27,6 +32,70 @@ vector<int> fromC(int n, int ms, bool *m, int c) {
     
     return ids;
 }
+
+int compute(vector<pair<int, int>> css) {
+    int total = 0;
+    
+    for (pair<int, int> p : css) {        
+        total += p.first * p.first;
+    }
+    
+    return total;
+}
+
+int opt(vector<pair<int, int>> pos, vector<pair<int, int>> neg) {
+    if (neg.size() == 0)return compute(pos);
+    
+    pair<int, int> t = neg.back();
+    neg.erase(neg.end());
+    
+    //printf("selecting (%d, %d)\n", t.first, t.second);
+    
+    vector<int> vals;
+    int size = pos.size();
+    vector<pair<int, int>> list;
+    for (int i = 0; i < size; i++) {
+        pair<int, int> tt = pos.front();
+        pos.erase(pos.begin());
+        //printf("selecting (%d, %d)\n", tt.first, tt.second);
+        
+        vector<pair<int, int>>::iterator it = find(list.begin(), list.end(), tt);
+        if (it == list.end()) {
+            //printf("selecting (%d, %d)\n", tt.first, tt.second);
+            list.push_back(tt);
+            
+            t.first += tt.first;
+            t.second += tt.second;
+            
+            if (t.first > t.second) {
+                pos.push_back(t);
+                
+                vals.push_back(opt(pos, neg));
+                
+                pos.erase(pos.end());
+            } else if (t.first < t.second) {
+                neg.push_back(t);
+                
+                vals.push_back(opt(pos, neg));
+                
+                neg.erase(neg.end());
+            } else {
+                vals.push_back(opt(pos, neg) + t.first * t.second);
+            }
+            //cout << "OPT " << vals.back() << endl;
+            
+            t.first -= tt.first;
+            t.second -= tt.second;
+        }
+        
+        pos.push_back(tt);
+    }
+    
+    neg.push_back(t);
+    sort(vals.begin(), vals.end());
+    return vals.front();
+}
+
 
 int main(int argc, char **argv) {
 	const char *fn = "sample4.in";
@@ -50,6 +119,7 @@ int main(int argc, char **argv) {
             if (c == '1')m[i] = true;
             if (c == '1')skills++;
         }
+        //printf("total skills %d\n", skills);
         
         unordered_set<int> pool;
         for (int i = 0; i < n; i++)pool.insert(i);
@@ -104,13 +174,22 @@ int main(int argc, char **argv) {
             }
             
             css.push_back(pair<int, int>(ls, ext.size()));
-            cout << "Comp Size" << ls << ":";
-            cout << "Ext Size" << ext.size() << ":";
+            //cout << "Comp Size" << ls << ":";
+            //cout << "Ext Size" << ext.size() << ":";
             
         }
         
+        skills = -skills;
+        vector<pair<int, int>> pos, neg;
+        for (pair<int, int> p : css) {            
+            //printf("comp (%d, %d)\n", p.first, p.second);
+            if (p.first > p.second)pos.push_back(p);
+            if (p.first < p.second)neg.push_back(p);
+            if (p.first == p.second)skills += p.first * p.second;
+        }
+        
 		cout << "Case #" << i << ": ";
-        cout << -skills;
+        cout << opt(pos, neg) + skills;
         
 		cout << endl;
 	}
