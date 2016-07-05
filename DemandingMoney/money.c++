@@ -8,7 +8,9 @@
 #include <algorithm>
 using namespace std;
 
-vector<int> toV(unsigned long long int item) {
+unsigned long long int ONE = 1;
+    
+vector<int> toV(unsigned long long int &item) {
     vector<int> l;
     for (int i = 0; item > 0; i++) {
         if (item % 2 == 1)l.push_back(i);
@@ -18,15 +20,108 @@ vector<int> toV(unsigned long long int item) {
     return l;
 }
 
-unsigned long long int fromV(vector<int> vs) {
+unsigned long long int fromV(vector<int> &vs) {
     if (vs.empty())return 0;
 
     unsigned long long int item = 0;    
     for (int v : vs) {
-        item |= 1 << v;
+        item |= ONE << v;
     }
     
     return item;
+}
+
+vector<vector<int>> partition(unordered_map<int, vector<int>> &g) {
+    vector<unordered_set<int>> comps;
+    for (int i = 0; i < g.size(); i++) {
+        comps.push_back(unordered_set<int>());
+        comps.back().insert(i);
+    }
+    
+    for (pair<int, vector<int>> p : g) {
+        vector<int> vs = p.second;
+        vs.push_back(p.first);
+        
+        unordered_set<int> ncomp;
+        vector<unordered_set<int>> ncomps;
+        for (unordered_set<int> comp : comps) {
+            bool absorbed = false;
+            for (int i : vs) {
+                if (comp.count(i) > 0) {
+                    absorbed = true;
+                    for (int j : comp)ncomp.insert(j);
+                }
+            }
+            
+            if (!absorbed)ncomps.push_back(comp);
+        }
+        ncomps.push_back(ncomp);
+        comps = ncomps;
+    }
+    
+    vector<vector<int>> lst;
+    for (unordered_set<int> comp : comps) {
+        lst.push_back(vector<int>());
+        for (int i : comp) {
+            lst.back().push_back(i);
+        }
+    }
+    
+    return lst;
+}
+
+int solve(vector<int> &cs, unordered_map<int, vector<int>> &g, vector<int> &comp, unsigned long long int &factor) {
+    unordered_map<unsigned long long int, unsigned long long int> cljs;
+    unordered_map<unsigned long long int, unsigned short> vals;
+    unordered_map<unsigned long long int, bool> covers;
+    
+    unsigned long long int vs = fromV(comp);
+    int cur = 0, count = 1;
+    
+    vals[vs] = cur;
+    cljs[vs] = 0;
+    covers[vs] = true;
+    queue<unsigned long long int> wl({vs});
+    
+    while (wl.size() > 0) {
+        unsigned long long int item = wl.front();
+        wl.pop();
+        unsigned long long int clj = cljs[item];
+        unsigned long long int itemf = item & (~clj);
+        if (itemf == 0) {
+            continue;
+        }
+        
+        int bal = vals[item];
+        vector<int> vs = toV(itemf);
+        for (int v : vs) {
+            int val = cs[v];
+            
+            unsigned long long int nclj = fromV(g[v]) | clj | (ONE << v);
+            unsigned long long int nitem = item ^ (ONE << v);
+            cljs[nitem] = nclj;
+            
+            if (vals[nitem] < bal + val || !covers[nitem]) {
+                vals[nitem] = bal + val;
+                
+                if (vals[nitem] > cur) {
+                    cur = vals[nitem];
+                    count = 0;
+                }
+                if (vals[nitem] == cur)count++;   
+            }
+            
+            if (covers[nitem]) {
+                continue;
+            } else {
+                covers[nitem] = true;
+                wl.push(nitem);
+            }                   
+        }
+    }
+    factor *= count;
+    
+    return cur;
 }
 
 int main() {
@@ -34,7 +129,7 @@ int main() {
     int n, m;
     cin >> n >> m;
     
-    unsigned long long int size = 1 << n;
+    unsigned long long int size = ONE << n;
     
     vector<int> cs;
     vector<int> zs;
@@ -61,47 +156,12 @@ int main() {
         g[b].push_back(a);
     }
     
-    unordered_map<unsigned long long int, unsigned long long int> cljs;
-    int *vals = (int *)calloc(size, sizeof(int));
-    cljs[size - 1] = 0;
-    queue<unsigned long long int> wl({size - 1});
+    vector<vector<int>> comps = partition(g);
     
-    vector<unsigned long long int> maximal;
+    unsigned long long int cur = 0, count = 1;
     
-    int cur = 0, count = 0;
-    while (wl.size() > 0) {
-        unsigned long long int item = wl.front();
-        wl.pop();
-        unsigned long long int clj = cljs[item];
-        unsigned long long int itemf = item & (~clj);
-        if (itemf == 0) {
-            maximal.push_back(item);
-            continue;
-        }
-        
-        int bal = vals[item];
-        vector<int> vs = toV(itemf);
-        for (int v : vs) {
-            int val = cs[v];
-            
-            vector<int> ext = g[v];
-            ext.push_back(v);
-            
-            unsigned long long int nclj = fromV(ext) | clj;
-            unsigned long long int nitem = item ^ (1 << v);
-            cljs[nitem] = nclj;
-            
-            if (vals[nitem] >= bal + val)continue;
-            if (vals[nitem] == 0)wl.push(nitem);
-            
-            vals[nitem] = bal + val;
-            if (vals[nitem] < cur)continue;
-            if (vals[nitem] > cur) {
-                cur = vals[nitem];
-                count = 0;
-            }
-            count++;          
-        }
+    for (vector<int> comp : comps) {
+        cur += solve(cs, g, comp, count);
     }
     
     cout << cur << " " << count << endl;
