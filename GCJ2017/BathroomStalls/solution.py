@@ -23,4 +23,8 @@ for i in range(num):
     if not user_left > residule:
         size += 1
     # print(size)
-    print('Case #{}: {} {}'.format(i + 1, math.ceil((size - 1) / 2), math.floor((size - 1) / 2)))
+    # print('Case #{}: {} {}'.format(i + 1, math.ceil((size - 1) / 2), math.floor((size - 1) / 2)))
+    if size % 2 == 1:
+        print('Case #{}: {} {}'.format(i + 1, (size - 1) // 2, (size - 1) // 2))
+    else:
+        print('Case #{}: {} {}'.format(i + 1, (size - 1) // 2 + 1, (size - 1) // 2))
