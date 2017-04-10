@@ -6,22 +6,16 @@ void find_positions(int N, vector<pair<int, int>> &positions) {
     if (positions.size() == N)return;
 
     for (int i = 0; i < N; i++) {
-        bool taken = false;
-        for (pair<int, int> &p : positions) {
-            if (i+1 == p.first)taken = true;
-        }
+        for (int j = 0; j < N; j++) {
+            bool taken = false;
+            for (pair<int, int> &p : positions) {
+                if (i+1 == p.first)taken = true;
+                if (j+1 == p.second)taken = true;
+            }
 
-        if (!taken) {
-            for (int j = 0; j < N; j++) {
-                bool taken = false;
-                for (pair<int, int> &p : positions) {
-                    if (j+1 == p.first)taken = true;
-                }
-
-                if (!taken) {
+            if (!taken) {
                     positions.emplace_back(i+1, j+1);
                     return find_positions(N, positions);
-                }
             }
         }
     }
