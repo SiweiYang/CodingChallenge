@@ -1,0 +1,77 @@
+name:                AdventOfCode
+version:             0.1.0.0
+synopsis:            Short description of your package
+homepage:            https://github.com/SiweiYang/AdventOfCode#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Author name here
+maintainer:          s8yang@uwaterloo.ca
+copyright:           2017 Siwei Yang
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+-- To avoid duplicated efforts in documentation and dealing with the
+-- complications of embedding Haddock markup inside cabal files, it is
+-- common to point users to the README.md file.
+description:         Please see the README on Github at <https://github.com/SiweiYang/AdventOfCode#readme>
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Lib
+  build-depends:       base >= 4.7 && < 5
+  default-language:    Haskell2010
+
+executable day1a
+  hs-source-dirs:      app
+  main-is:             day1a.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , AdventOfCode
+  default-language:    Haskell2010
+
+executable day1b
+  hs-source-dirs:      app
+  main-is:             day1b.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , AdventOfCode
+  default-language:    Haskell2010
+
+executable day2a
+  hs-source-dirs:      app
+  main-is:             day2a.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , AdventOfCode
+  default-language:    Haskell2010
+
+executable day2b
+  hs-source-dirs:      app
+  main-is:             day2b.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , AdventOfCode
+  default-language:    Haskell2010
+
+executable AdventOfCode-exe
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , AdventOfCode
+  default-language:    Haskell2010
+
+test-suite AdventOfCode-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       base
+                     , AdventOfCode
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/githubuser/AdventOfCode
