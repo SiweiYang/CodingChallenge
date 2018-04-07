@@ -135,6 +135,70 @@ executable day7b
                      , AdventOfCode
   default-language:    Haskell2010
 
+executable day8a
+  hs-source-dirs:      app
+  main-is:             day8a.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base, containers
+                     , AdventOfCode
+  default-language:    Haskell2010
+
+executable day8b
+  hs-source-dirs:      app
+  main-is:             day8b.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base, containers
+                     , AdventOfCode
+  default-language:    Haskell2010
+
+executable day9a
+  hs-source-dirs:      app
+  main-is:             day9a.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base, containers
+                     , AdventOfCode
+  default-language:    Haskell2010
+
+executable day9b
+  hs-source-dirs:      app
+  main-is:             day9b.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base, containers
+                     , AdventOfCode
+  default-language:    Haskell2010
+
+executable day10a
+  hs-source-dirs:      app
+  main-is:             day10a.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base, containers, split
+                     , AdventOfCode
+  default-language:    Haskell2010
+
+executable day10b
+  hs-source-dirs:      app
+  main-is:             day10b.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base, containers, split
+                     , AdventOfCode
+  default-language:    Haskell2010
+
+executable day11a
+  hs-source-dirs:      app
+  main-is:             day11a.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base, containers, split
+                     , AdventOfCode
+  default-language:    Haskell2010
+
+executable day11b
+  hs-source-dirs:      app
+  main-is:             day11b.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base, containers, split
+                     , AdventOfCode
+  default-language:    Haskell2010
+
 executable AdventOfCode-exe
   hs-source-dirs:      app
   main-is:             Main.hs
