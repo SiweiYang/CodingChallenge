@@ -18,34 +18,39 @@ func day1(inputFN string) {
 	total := 0
 
 	scanner := bufio.NewScanner(file)
-	var list []int
+	var raw_list []int
 	for scanner.Scan() {
 		n, _ := strconv.Atoi(scanner.Text())
+		raw_list = append(raw_list, n)
 
 		total += n
-		list = append(list, n)
 	}
 	file.Close()
 
 	fmt.Printf("The resulting frequency is %d\n", total)
 
+	list := make(chan int, len(raw_list))
+	for _, n := range raw_list {
+		list <- n
+	}
+
 	total = 0
 	visited := make(map[int]bool)
 	visited_twice := false
 	visited[total] = true
-	for {
-		n := list[0]
-		list = list[1:]
-		list = append(list, n)
 
+	for !visited_twice {
+		n := <- list
 		total += n
-		//fmt.Println(visited[total])
+		//fmt.Println(n)
 		if !visited_twice && visited[total] {
 			visited_twice = true
 			fmt.Printf("Reached %d twice first!\n", total)
-			break
+			//break
 		}
 		visited[total] = true
+
+		list <- n
 	}
 
 	if err := scanner.Err(); err != nil {

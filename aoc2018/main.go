@@ -16,9 +16,16 @@ func main() {
 			inputFN := c.Args().Get(1)
 
 			day1(inputFN)
+		} else if c.Args().Get(0) == "day2" {
+			fmt.Printf("this is day2\n")
+			inputFN := c.Args().Get(1)
+
+			day2(inputFN)
 		}
 
-		return nil
+
+
+			return nil
 	}
 
 	err := app.Run(os.Args)
